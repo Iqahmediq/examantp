@@ -34,6 +34,7 @@ public class BureauController {
     public ResponseEntity<Bureau> createBureau(@RequestBody Bureau bureau) {
         // Iterate through the chefs and set the bureau for each chef
         List<ChefDeProjet> chefsToPersist = new ArrayList<>();
+        if(bureau.getChefsDeProjet()!=null){
 
         for (ChefDeProjet chef : bureau.getChefsDeProjet()) {
             ChefDeProjet attachedChef = chefDeProjetRepository.findById(chef.getId()).orElse(null);
@@ -42,19 +43,35 @@ public class BureauController {
             }
         }
         bureau.setChefsDeProjet(chefsToPersist);
+        }
 
         Bureau savedBureau = bureauRepository.save(bureau);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBureau);
     }
 
-
     @PutMapping("/{bureauId}")
     public ResponseEntity<Bureau> updateBureau(@PathVariable Long bureauId, @RequestBody Bureau updatedBureau) {
-        // Use Optional to avoid potential NoSuchElementException
         return bureauRepository.findById(bureauId)
                 .map(bureau -> {
-                    bureau.setLocalisation(updatedBureau.getLocalisation());  // Corrected the assignment
+
+                    bureau.setLocalisation(updatedBureau.getLocalisation());
+                    bureau.setChefsDeProjet(new ArrayList<>());
+
+                    if (updatedBureau.getChefsDeProjet() != null) {
+
+                        List<ChefDeProjet> chefsToPersist = new ArrayList<>();
+                        for (ChefDeProjet chef : updatedBureau.getChefsDeProjet()) {
+                            ChefDeProjet attachedChef = chefDeProjetRepository.findById(chef.getId()).orElse(null);
+                            if (attachedChef != null) {
+                                chefsToPersist.add(attachedChef);
+                            }
+                        }
+                        bureau.setChefsDeProjet(chefsToPersist);
+                    }
+
+                    // Save the updated bureau
                     Bureau savedBureau = bureauRepository.save(bureau);
+
                     return ResponseEntity.ok(savedBureau);
                 })
                 .orElse(ResponseEntity.notFound().build());

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,4 +27,6 @@ public class Projet {
     @JoinColumn(name = "chef_de_projet_id")
     private ChefDeProjet chefDeProjet;
 
+    @ManyToMany(mappedBy = "projets")
+    private List<MembreEquipe> membresEquipe;
 }

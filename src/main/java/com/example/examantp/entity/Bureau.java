@@ -21,8 +21,6 @@ public class Bureau {
     private String localisation;
 
     @OneToMany(mappedBy = "bureau", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JsonBackReference
-
     private List<ChefDeProjet> chefsDeProjet;
 
     // Getters and setters

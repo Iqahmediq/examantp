@@ -24,6 +24,7 @@ public class ChefDeProjet {
     private List<Projet> projets;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "bureau_id")
     private Bureau bureau;
 

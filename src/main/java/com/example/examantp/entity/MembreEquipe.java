@@ -27,5 +27,7 @@ public class MembreEquipe {
     )
     private List<Projet> projets;
 
+
+
     // Constructors, getters, setters, and toString methods
 }
